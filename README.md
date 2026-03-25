@@ -47,43 +47,38 @@ The system combines:
 
 ## 🏗️ System Architecture
 
-
-User (Chat UI)
-↓
-LLM (Groq - SQL Generation)
-↓
-Query Engine (Execute SQL)
-↓
-SQLite Database
-↓
-Graph Builder (NetworkX)
-↓
-Graph API → React (Cytoscape Visualization)
-
+```mermaid
+graph TD;
+    User-->|Chat UI|LLM;
+    LLM-->|Groq - SQL Generation|QueryEngine;
+    QueryEngine-->|Execute SQL|SQLite;
+    SQLite-->|Data|GraphBuilder;
+    GraphBuilder-->|NetworkX|React;
+    React-->|Cytoscape|User;
+```
 
 ---
 
 ## 📦 Tech Stack
 
-### Backend
+**Backend:**
 - Python
 - FastAPI
 - SQLite
 - NetworkX
 
-### Frontend
+**Frontend:**
 - React (Vite)
 - Cytoscape.js
 - Tailwind CSS
 
-### LLM
+**LLM:**
 - Groq API (LLaMA 3.3 70B)
 
 ---
 
 ## 📁 Project Structure
-
-
+```text
 backend/
 ├── main.py
 ├── database.py
@@ -96,7 +91,7 @@ frontend/
 │ ├── components/
 │ │ ├── GraphView.jsx
 │ │ ├── ChatBox.jsx
-
+```
 
 ---
 
@@ -105,123 +100,122 @@ frontend/
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/KSurendra1/Graph-Based-Data-Modeling-and-LLM-Query-System.git
+git clone "https://github.com/KSurendra1/Graph-Based-Data-Modeling-and-LLM-Query-System.git"
 cd Graph-Based-Data-Modeling-and-LLM-Query-System
-2. Backend Setup
+```
+
+### 2. Backend Setup
+```bash
 cd backend
 python -m venv venv
 
-Activate environment:
-
-# Windows
+# Activate environment (Windows):
 venv\Scripts\activate
 
-# Mac/Linux
+# Activate environment (Mac/Linux):
 source venv/bin/activate
 
-Install dependencies:
-
+# Install dependencies:
 pip install -r requirements.txt
+```
 
-Add .env file:
-
+**Add `.env` file in the backend directory:**
+```env
 GROQ_API_KEY=your_api_key_here
+```
 
-Run server:
-
+**Run server:**
+```bash
 uvicorn main:app --port 8000
-3. Frontend Setup
-cd frontend
+```
+
+### 3. Frontend Setup
+```bash
+cd ../frontend
 npm install
 npm run dev
-
-Open:
-
-http://localhost:5173
-💬 Example Queries
-Which products have the highest number of invoices?
-Trace the full flow of invoice ID 123
-Find orders that were delivered but not billed
-Show customers with the highest payments
-🔍 Graph Data Model
-Nodes
-Customer
-Order
-OrderItem
-Product
-Delivery
-Invoice
-Payment
-Address
-Relationships
-Customer → Order
-Order → OrderItem
-OrderItem → Product
-Order → Delivery
-Delivery → Invoice
-Invoice → Payment
-Customer → Address
-🤖 LLM Prompting Strategy
-Schema-aware prompting (tables + relationships defined explicitly)
-Strict SQL-only response enforcement
-Regex-based SQL extraction for safe execution
-Post-processing for natural language responses
-🛡️ Guardrails
-Rejects non-domain queries
-Prevents hallucinated answers
-Handles invalid SQL safely
-Returns fallback message:
-"This system only answers dataset-related queries."
-⚖️ Design Decisions
-Why SQLite?
-Lightweight and easy to setup
-Perfect for structured querying with LLM-generated SQL
-No external dependencies
-Why NetworkX?
-Flexible graph construction
-Easy integration with Python backend
-Works well for MVP without Neo4j complexity
-Why Not Neo4j?
-Adds setup overhead
-Not necessary for assignment scope
-Focus is on modeling, not tooling
-🚀 Future Improvements
-Neo4j integration for large-scale graph queries
-Streaming LLM responses
-Conversation memory
-Semantic search over entities
-Role-based access control
-📊 Evaluation Alignment
-
-This project demonstrates:
-
-Strong graph modeling from relational data
-Clean backend architecture
-Effective LLM usage with prompt engineering
-Robust guardrails
-Real-world system thinking
-👨‍💻 Author
-
-K Surendra Kumar
-
-GitHub: https://github.com/KSurendra1
-
-📌 Note
-
-This project is built as part of a Forward Deployed Engineer assignment focusing on:
-
-Data modeling
-System design
-LLM integration
-Real-world problem solving
+```
+Open your browser to: **http://localhost:5173**
 
 ---
 
-## 👍 If You Want Next
+## 💬 Example Queries
+*Test the system's reasoning capabilities by typing these into the ChatBox:*
 
-I can help you with:
-- 🔥 Demo script (what to say during evaluation)
-- 📽️ Video walkthrough script
-- 🧠 AI logs formatting (very important for submission)
+- *"Which products have the highest number of invoices?"*
+- *"Trace the full flow of billing document 91150187"*
+- *"Find orders that were delivered but not billed"*
+- *"Show customers with the highest payments"*
 
-Just tell me 👍
+---
+
+## 🔍 Graph Data Model
+
+**Nodes:**
+`Customer`, `Order`, `OrderItem`, `Product`, `Delivery`, `Invoice`, `Payment`, `Address`
+
+**Relationships:**
+- `Customer` → `Order`
+- `Order` → `OrderItem`
+- `OrderItem` → `Product`
+- `Order` → `Delivery`
+- `Delivery` → `Invoice`
+- `Invoice` → `Payment`
+- `Customer` → `Address`
+
+---
+
+## 🤖 LLM Prompting Strategy
+- **Schema-aware prompting** (tables + relationships defined explicitly)
+- **Strict SQL-only response enforcement**
+- **Regex-based SQL extraction** for safe execution
+- **Post-processing** for natural language responses
+
+## 🛡️ Guardrails
+- Rejects non-domain queries
+- Prevents hallucinated answers
+- Handles invalid SQL safely
+- Returns fallback message: *"This system only answers dataset-related queries."*
+
+---
+
+## ⚖️ Design Decisions
+
+**Why SQLite?**
+- Lightweight and easy to setup
+- Perfect for structured querying with LLM-generated SQL
+- No external dependencies
+
+**Why NetworkX?**
+- Flexible graph construction
+- Easy integration with Python backend
+- Works well for MVP without Neo4j complexity
+
+**Why Not Neo4j?**
+- Adds setup overhead
+- Not necessary for assignment scope
+- Focus is on modeling, not tooling
+
+---
+
+## 🚀 Future Improvements
+- Neo4j integration for large-scale graph queries
+- Streaming LLM responses
+- Conversation memory
+- Semantic search over entities
+- Role-based access control
+
+---
+
+## 📊 Evaluation Alignment
+This project demonstrates:
+1. Strong graph modeling from relational data
+2. Clean backend architecture
+3. Effective LLM usage with prompt engineering
+4. Robust guardrails
+5. Real-world system thinking
+
+**👨‍💻 Author**: K Surendra Kumar  
+**GitHub**: [KSurendra1](https://github.com/KSurendra1)
+
+*Note: This project is built as part of a Forward Deployed Engineer assignment focusing on Data modeling, System design, LLM integration, and Real-world problem solving.*
